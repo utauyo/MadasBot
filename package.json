@@ -1,0 +1,25 @@
+{
+  
+  "name": "madasbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "dev": "nodemon index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Madasish/MadasBot.git"
+  },
+  "author": "Madasish",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Madasish/MadasBot/issues"
+  },
+  "homepage": "https://github.com/Madasish/MadasBot#readme",
+  "dependencies": {
+    "discord.js": "^13.8.0",
+    "dotenv": "^16.0.1"
+  }
+}
