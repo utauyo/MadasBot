@@ -15,12 +15,12 @@ const client = new Client({
 // Load all commands
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const commands = [];
-client.commands = new Collection();
+const clientCommands = new Collection();
 
 for(const file of commandFiles) {
     const command = require(`./commands/${file}`);
     commands.push(command.data.toJSON());
-    client.commands.set(command.data.name, command);
+    clientCommands.set(command.data.name, command);
 }
 
 // Ready event    
@@ -58,7 +58,7 @@ client.once('ready', () => {
 client.on("interactionCreate", async interaction => {
     if(!interaction.isCommand()) return;
 
-    const command = client.command.get(interaction.commandName);
+    const command = clientCommands.get(interaction.commandName);
 
     if(!command) return;
 
