@@ -26,6 +26,7 @@
     "ws": "^8.8.0"
   },
   "scripts": {
+    "start": "node index.js",
     "test": "node index.js"
   },
   "repository": {
@@ -37,5 +38,8 @@
   "bugs": {
     "url": "https://github.com/Madasish/MadasBot/issues"
   },
-  "homepage": "https://github.com/Madasish/MadasBot#readme"
+  "homepage": "https://github.com/Madasish/MadasBot#readme",
+  "devDependencies": {
+    "eslint": "^8.17.0"
+  }
 }
