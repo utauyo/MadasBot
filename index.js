@@ -40,12 +40,12 @@ client.once('ready', () => {
                 await rest.put(Routes.applicationCommands(CLIENT_ID), {
                     body: commands
                 })
-                console.log("Commands registere globally!");
+                console.log("Commands registered globally!");
             } else {
                 await rest.put(Routes.applicationGuildCommands(CLIENT_ID, process.env.TESTING_GUILD_ID), {
                     body: commands
                 })
-                console.log("Commands registere locally!");
+                console.log("Commands registered locally!");
             }
         } catch(err) {
             if(err) console.log(err);
