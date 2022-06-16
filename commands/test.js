@@ -1,12 +1,13 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const picture = require('../pfp.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('ping')
-        .setDescription('Pong!'),
-    async execute(interaction, client) {
+        .setName('test')
+        .setDescription('testing commands'),
+    async execute(interaction) {
         interaction.reply({
-            content: `Pong! (Heartbeat: ${client.ws.ping})`,
+            content: `test ${picture}`,
             emphemeral: true
         });
 
