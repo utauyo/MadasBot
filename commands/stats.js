@@ -8,7 +8,7 @@ module.exports = {
     
     async execute(interaction, client) {
 
-        var embed = new MessageEmbed() 
+        const embed = new MessageEmbed() 
         .setTitle('Stats')
         .addField('Server count', `${client.guilds.cache.size}`, true)
         .addField('Channel count', `${client.channels.cache.size}`, true)
