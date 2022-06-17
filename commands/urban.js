@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, SlashCommandSubcommandBuilder } = require('@discordjs/builders');
+var {fromIsoToHuman} = require('@sineverba/date-convert');
 const { MessageEmbed } = require('discord.js');
 const ud = require('urban-dictionary');
 
@@ -23,29 +24,22 @@ module.exports = {
         // .addStringOption(term => term.setName('term').setRequired(true).setDescription('term to search for'))
         ,
     async execute(interaction) {
-        const theWordsIdk = interaction.options._hoistedOptions[0].value;
-        const embedColour = "#1fa2f3"
-
         if(interaction.options.getSubcommand() === 'define') {
-
-            //Find the definition for theWordsIdk using ud
+            const theWordsIdk = interaction.options._hoistedOptions[0].value;
             ud.define(theWordsIdk, (error, results) => {
                 if(error) console.log(error)
+
                 const finalResult = results.sort((a, b) => b.thumbs_up - a.thumbs_up)[0];
 
-                // const writtenOn = finalResult.written_on.match(/^[^T]*/)[0].split(' ')
-                // console.log(writtenOn)
-
                 const embed = new MessageEmbed() 
-                .setTitle(`${finalResult.word}`)
+                .setTitle(`Definition of ${finalResult.word}`)
                 .setURL(`${finalResult.permalink}`)
                 .setDescription(`${finalResult.definition}`)
                 .addField('Example', `${finalResult.example}`, false)
                 .addField('👍', `${finalResult.thumbs_up}`, true)
                 .addField('👎', `${finalResult.thumbs_down}`, true)
-                .setColor(embedColour)
-                // .setFooter({ text: `by ${finalResult.author} written on ${finalResult.written_on}` });
-                .setFooter({ text: `by ${finalResult.author}` });
+                .setColor(process.env.EMBED_COLOUR)
+                .setFooter({ text: `by ${finalResult.author} on ${fromIsoToHuman(finalResult.written_on, "DD/MM/YYYY")}` });
 
                 interaction.reply({
                     embeds: [embed],
@@ -55,11 +49,29 @@ module.exports = {
             });
 
         } else if(interaction.options.getSubcommand() === 'wotd') {
-            console.log(`wotd`)
-            interaction.reply({
-                content: `yep`,
-                // embeds: [embed],
-                ephemeral: false
+            /*
+            at some point might wanna add something like pagination embed to this command
+            */
+            ud.wordsOfTheDay((error, results) => {
+                if(error) console.log(error)
+
+                const finalResult = results[0];
+
+                const embed = new MessageEmbed() 
+                .setTitle(`Word of the day: ${finalResult.word}`)
+                .setURL(`${finalResult.permalink}`)
+                .setDescription(`${finalResult.definition}`)
+                .addField('Example', `${finalResult.example}`, false)
+                .addField('👍', `${finalResult.thumbs_up}`, true)
+                .addField('👎', `${finalResult.thumbs_down}`, true)
+                .setColor(process.env.EMBED_COLOUR)
+                .setFooter({ text: `by ${finalResult.author} on ${fromIsoToHuman(finalResult.written_on, "DD/MM/YYYY")}` });
+
+                interaction.reply({
+                    embeds: [embed],
+                    ephemeral: false
+                });
+
             });
         }
     }
