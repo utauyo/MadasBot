@@ -50,7 +50,7 @@ module.exports = {
 
         } else if(interaction.options.getSubcommand() === 'wotd') {
             /*
-            at some point might wanna add something like pagination embed to this command
+            at some point might wanna add something like pagination embed to this subcommand
             */
             ud.wordsOfTheDay((error, results) => {
                 if(error) console.log(error)
