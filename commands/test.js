@@ -9,7 +9,7 @@ module.exports = {
     async execute(interaction) {
         console.log(interaction.options._hoistedOptions[0].value);
         interaction.reply({
-            content: `yep`,
+            content: `ok`,
             emphemeral: true
         });
 

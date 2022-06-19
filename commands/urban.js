@@ -6,7 +6,7 @@ const ud = require('urban-dictionary');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('urban')
-        .setDescription('Urban Dictionary')
+        .setDescription('Find definitions of words on urban dictionary.')
         .addSubcommand(
             new SlashCommandSubcommandBuilder()
             .setName('define')
@@ -58,7 +58,7 @@ module.exports = {
                 const finalResult = results[0];
 
                 const embed = new MessageEmbed() 
-                .setTitle(`Word of the day: ${finalResult.word}`)
+                .setTitle(`Top word of the day: ${finalResult.word}`)
                 .setURL(`${finalResult.permalink}`)
                 .setDescription(`${finalResult.definition}`)
                 .addField('Example', `${finalResult.example}`, false)
