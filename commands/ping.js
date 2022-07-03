@@ -5,6 +5,7 @@ module.exports = {
         .setName('ping')
         .setDescription('Pong!'),
     async execute(interaction, client) {
+        
         const reply = await interaction.reply({
             content: `Ping?`,
             emphemeral: false,
@@ -14,10 +15,6 @@ module.exports = {
         const diff = reply.createdTimestamp - interaction.createdTimestamp;
         const ping = Math.round(client.ws.ping);
         return interaction.editReply(`Pong! 🏓 (Round trip took: ${diff}ms. Heartbeat: ${ping}ms.)`);
-
-        
-    
-        
 
     }
 }

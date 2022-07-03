@@ -16,7 +16,7 @@ module.exports = {
         //     .setColor('#ff5c5c')
     
             await interaction.reply({
-                content: "a",
+                content: "",
                 ephemeral: false
             });
     }

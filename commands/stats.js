@@ -5,7 +5,6 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('stats')
         .setDescription('Bots stats'),
-    
     async execute(interaction, client) {
 
         const embed = new MessageEmbed() 
@@ -13,7 +12,6 @@ module.exports = {
         .addField('Server count', `${client.guilds.cache.size}`, true)
         .addField('Channel count', `${client.channels.cache.size}`, true)
         .addField('User count', `${client.users.cache.size}`, true)
-        // .addField('Ping', `${client.ws.ping}`, true)
         .addField('Language', 'Javascript', true)
         .addField('Author', 'Madasish#6125', true)
         .setColor(process.env.EMBED_COLOUR);
