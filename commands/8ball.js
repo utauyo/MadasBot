@@ -17,17 +17,13 @@ module.exports = {
           .then(response => response.json())
           .then(json => {
 
-            console.log(json.magic.type)
-
             const embed = new MessageEmbed() 
                 // .setTitle(`🎱 8ball`)
                 .addField('You:', `${json.magic.question}`, false)
                 .addField('8ball:', `${json.magic.answer}`, false)
                 .setColor('#000000')
-                // .setFooter({ text: `by ${finalResult.author} on ${fromIsoToHuman(finalResult.written_on, "DD/MM/YYYY")}` });
 
             interaction.reply({
-                // content: `${json.magic.answer}`,
                 embeds: [embed],
                 ephemeral: false
             });

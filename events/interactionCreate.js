@@ -1,5 +1,7 @@
 // const { REST } = require('@discordjs/rest');
 // const { Routes } = require('discord-api-types/v9');
+const epic = require('../epic.js')
+const { MessageEmbed } = require('discord.js')
 require('dotenv').config();
 
 module.exports = {
@@ -17,10 +19,15 @@ module.exports = {
             await command.execute(interaction, interaction.client);
         } catch(err){
             if(err) console.log(err);
+            const embed = new MessageEmbed() 
+            .setDescription(`Something went wrong!`)
+            .setImage(`${epic.randomCrashGif()}`)
+            .setColor('#ff5c5c')
+    
             await interaction.reply({
-                content: "Something went wrong!",
-                ephemeral: true
-                });
+                embeds: [embed],
+                ephemeral: false
+            });
         }
     }
 }

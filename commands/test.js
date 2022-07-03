@@ -1,17 +1,23 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+// const { MessageEmbed } = require('discord.js')
+// const epic = require('../epic')
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('test')
         .setDescription('testing commands')
-        .addStringOption(term => term.setName('term').setRequired(true).setDescription('term to search for'))
+        .addStringOption(term => term.setName('nickname').setRequired(true).setDescription('what nickname to set'))
         ,
     async execute(interaction) {
-        console.log(interaction.options._hoistedOptions[0].value);
-        interaction.reply({
-            content: `ok`,
-            emphemeral: true
-        });
 
+        // const embed = new MessageEmbed() 
+        //     .setDescription(`Something went wrong!`)
+        //     .setImage(`${epic.randomCrashGif}`)
+        //     .setColor('#ff5c5c')
+    
+            await interaction.reply({
+                content: "a",
+                ephemeral: false
+            });
     }
 }

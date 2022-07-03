@@ -104,3 +104,4 @@ dist
 .tern-port
 
 ./commands/test.js
+commands/test.js
