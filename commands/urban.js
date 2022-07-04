@@ -73,6 +73,8 @@ module.exports = {
                 });
 
             });
+        } else {
+            interaction.reply("I am sorry how the hell?")
         }
     }
 }
