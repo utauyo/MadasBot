@@ -13,7 +13,6 @@ module.exports = {
         .addField('Channel count', `${client.channels.cache.size}`, true)
         .addField('User count', `${client.users.cache.size}`, true)
         .addField('Language', 'Javascript', true)
-        .addField('Author', 'Madasish#6125', true)
         .setColor(process.env.EMBED_COLOUR);
 
         interaction.reply({
