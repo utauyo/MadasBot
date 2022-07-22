@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/home/madas/.nvm/versions/node/v16.16.0/bin/node
 require('dotenv').config();
 const fs = require('fs');
 const Database = require("./config/Database")

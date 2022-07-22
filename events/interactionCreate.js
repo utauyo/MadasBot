@@ -17,17 +17,27 @@ module.exports = {
     
         try {
             await command.execute(interaction, interaction.client);
-        } catch(err){
-            if(err) console.log(err);
+        } catch(error){
+            if(error) console.log(error);
             const embed = new MessageEmbed() 
             .setDescription(`Something went wrong!`)
             .setImage(`${epic.randomCrashGif()}`)
             .setColor('#ff5c5c')
     
-            await interaction.reply({
-                embeds: [embed],
-                ephemeral: false
-            });
+            try {
+                await interaction.reply({
+                    embeds: [embed],
+                    ephemeral: false
+                });
+            } catch(error) {
+                try {
+                    await interaction.editReply({
+                        embeds: [embed],
+                        ephemeral: false
+                    });
+                } catch(error) {return}
+                
+            }
         }
     }
 }

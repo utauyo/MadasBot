@@ -24,27 +24,33 @@ module.exports = {
         // .addStringOption(term => term.setName('term').setRequired(true).setDescription('term to search for'))
         ,
     async execute(interaction) {
+
+        interaction.deferReply({ephemeral: false})
+
         if(interaction.options.getSubcommand() === 'define') {
             const theWordsIdk = interaction.options._hoistedOptions[0].value;
             ud.define(theWordsIdk, (error, results) => {
-                if(error) console.log(error)
+                try {
+                    if(error) console.log(error)
 
-                const finalResult = results.sort((a, b) => b.thumbs_up - a.thumbs_up)[0];
-
-                const embed = new MessageEmbed() 
-                .setTitle(`Definition of ${finalResult.word}`)
-                .setURL(`${finalResult.permalink}`)
-                .setDescription(`${finalResult.definition}`)
-                .addField('Example', `${finalResult.example}`, false)
-                .addField('👍', `${finalResult.thumbs_up}`, true)
-                .addField('👎', `${finalResult.thumbs_down}`, true)
-                .setColor(process.env.EMBED_COLOUR)
-                .setFooter({ text: `by ${finalResult.author} on ${fromIsoToHuman(finalResult.written_on, "DD/MM/YYYY")}` });
-
-                interaction.reply({
-                    embeds: [embed],
-                    ephemeral: false
-                });
+                    const finalResult = results.sort((a, b) => b.thumbs_up - a.thumbs_up)[0];
+    
+                    const embed = new MessageEmbed() 
+                    .setTitle(`Definition of ${finalResult.word}`)
+                    .setURL(`${finalResult.permalink}`)
+                    .setDescription(`${finalResult.definition}`)
+                    .addField('Example', `${finalResult.example}`, false)
+                    .addField('👍', `${finalResult.thumbs_up}`, true)
+                    .addField('👎', `${finalResult.thumbs_down}`, true)
+                    .setColor(process.env.EMBED_COLOUR)
+                    .setFooter({ text: `by ${finalResult.author} on ${fromIsoToHuman(finalResult.written_on, "DD/MM/YYYY")}` });
+    
+                    interaction.editReply({
+                        embeds: [embed]
+                    });
+                } catch(error) {
+                    interaction.editReply("Something went wrong!")
+                }
 
             });
 
@@ -67,14 +73,14 @@ module.exports = {
                 .setColor(process.env.EMBED_COLOUR)
                 .setFooter({ text: `by ${finalResult.author} on ${fromIsoToHuman(finalResult.written_on, "DD/MM/YYYY")}` });
 
-                interaction.reply({
+                interaction.editReply({
                     embeds: [embed],
                     ephemeral: false
                 });
 
             });
         } else {
-            interaction.reply("I am sorry how the hell?")
+            interaction.editReply("I am sorry how the fuck?")
         }
     }
 }
