@@ -13,7 +13,8 @@ module.exports = {
         });
 
         const diff = reply.createdTimestamp - interaction.createdTimestamp;
-        const ping = Math.round(client.ws.ping);
+        const ping = client.ws.ping;
+        // const ping = Math.round(client.ws.ping);
         return interaction.editReply(`Pong! 🏓 (Round trip took: ${diff}ms. Heartbeat: ${ping}ms.)`);
 
     }

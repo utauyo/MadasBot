@@ -2,7 +2,6 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const ytdl = require('ytdl-core');
 const { joinVoiceChannel, createAudioResource, createAudioPlayer, AudioPlayerStatus} = require("@discordjs/voice")
 const yts = require( 'yt-search' );
-const { get } = require('mongoose');
 
 const map = new Map();
 
