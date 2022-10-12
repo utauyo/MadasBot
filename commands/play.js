@@ -30,10 +30,11 @@ module.exports = {
         await interaction.deferReply({
             ephemeral: true
         })
+        
 
         if(!channel) return interaction.editReply("You need to be in a voice channel!")
 
-        if(typeof map.get(channel.guild.id) === 'undefined') {
+        if(!map.get(channel.guild.id)) {
 
             console.log("queue no exists")
 
@@ -47,17 +48,19 @@ module.exports = {
             })
             console.log("queue init")
 
-            const gq = map.get(channel.guild.id)
+            const gqGet = map.get(channel.guild.id)
+
+            // const gqSet = function(a,b) {map.set(channel.guild.id.${a}, b)}
 
             // console.log(gq)
             
             const getNextSong = function() {
-                const array = gq.queue[0].slice(1,0)
+                const array = gqGet.queue.slice(1,0)
                 map.set(channel.guild.id.queue, array)
-                return createAudioResource(ytdl(gq.currentsong.url))
+                return createAudioResource(ytdl(gqGet.currentsong.url))
             }
             
-            map.set(channel.guild.id.resource, createAudioPlayer(ytdl(gq.queue[0].url)))
+            map.set(channel.guild.id.resource, createAudioPlayer(ytdl(gqGet.queue[0].url)))
 
             const connection = joinVoiceChannel({
                 channelId: channel.id,
@@ -65,7 +68,7 @@ module.exports = {
                 adapterCreator: channel.guild.voiceAdapterCreator,
             });
 
-            const resource = createAudioResource(ytdl(gq.queue[0].url))
+            const resource = createAudioResource(ytdl(gqGet.queue[0].url))
 
             const player = createAudioPlayer();
 
@@ -79,21 +82,18 @@ module.exports = {
                 console.error('Error:', error.message, 'with track');
             });
 
-            player.on('error', error => {
-                console.error('Error:', error.message, 'with track');
-            });
-
             player.on(AudioPlayerStatus.Idle, () => {
-                if(gq.queue.length() < 2) {
+                console.log("idling")
+                if(gqGet.queue.length < 2) {
                     map.delete(interaction.guildId)
-                    return
+                } else {
+                    player.play(getNextSong());
                 }
-                player.play(getNextSong());
             });
 
-            await interaction.editReply(`Playing "${gq.queue[0].title}"`)
+            await interaction.editReply(`Playing "${gqGet.queue[0].title}"`)
             
-        } else if(!map.get(channel.guild.id).queue) {
+        } else if(map.get(channel.guild.id).queue) {
             console.log("queue exists")
             const results = await yts({query: query, type: "video"})
             const result = results.videos[0]
