@@ -59,10 +59,10 @@ module.exports = {
             const getNextSong = function() {
                 const array = gqGet.queue.slice(1,0)
                 map.set(channel.guild.id.queue, array)
-                return createAudioResource(ytdl(gqGet.currentsong.url))
+                return createAudioResource(ytdl(gqGet.queue[0].url))
             }
             
-            map.set(channel.guild.id.resource, createAudioPlayer(ytdl(gqGet.queue[0].url)))
+            // map.set(channel.guild.id.resource, createAudioPlayer(ytdl(gqGet.queue[0].url)))
 
             const connection = joinVoiceChannel({
                 channelId: channel.id,
@@ -92,8 +92,8 @@ module.exports = {
                     interaction.channel.message.send(`Playing next song "${gqGet.queue[0].title}"!`)
                 }
             });
-
-            console.log(`Playing "${gqGet.queue[0].title}" in ${interaction.guild}`)
+            console.log(gqGet)
+            console.log(`Playing "${gqGet.queue[0].title}" in ${interaction.guild} (${interaction.guildId})`)
 
             await interaction.editReply(`Playing "${gqGet.queue[0].title}"`)
             
