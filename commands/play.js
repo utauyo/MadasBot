@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const ytdl = require('ytdl-core');
 const { joinVoiceChannel, createAudioResource, createAudioPlayer, AudioPlayerStatus} = require("@discordjs/voice")
 const yts = require( 'yt-search' );
+// const ch = require('chalk')
 
 const map = new Map();
 
@@ -31,12 +32,13 @@ module.exports = {
             ephemeral: true
         })
         
-
+        // Check for if youre in a vc
         if(!channel) return interaction.editReply("You need to be in a voice channel!")
 
+        // Check if a queue exists for the server youre in
         if(!map.get(channel.guild.id)) {
 
-            console.log("queue no exists")
+            console.log("Music queue doesnt exist")
 
             const results = await yts({query: query, type: "video"})
             const result = results.videos[0]
@@ -44,9 +46,9 @@ module.exports = {
             map.set(channel.guild.id, {
                 thechannel: interaction.channel.id,
                 queue: [result],
-                
             })
-            console.log("queue init")
+
+            console.log("Music queue init")
 
             const gqGet = map.get(channel.guild.id)
 
@@ -74,8 +76,6 @@ module.exports = {
 
             connection.subscribe(player)
 
-            
-
             player.play(resource)
             
             player.on('error', error => {
@@ -83,13 +83,17 @@ module.exports = {
             });
 
             player.on(AudioPlayerStatus.Idle, () => {
-                console.log("idling")
+                console.log(`Idling in ${interaction.guildId}`)
                 if(gqGet.queue.length < 2) {
                     map.delete(interaction.guildId)
                 } else {
                     player.play(getNextSong());
+                    console.log(`Playing next song "${gqGet.queue[0].title}" in ${interaction.guild}`)
+                    interaction.channel.message.send(`Playing next song "${gqGet.queue[0].title}"!`)
                 }
             });
+
+            console.log(`Playing "${gqGet.queue[0].title}" in ${interaction.guild}`)
 
             await interaction.editReply(`Playing "${gqGet.queue[0].title}"`)
             
@@ -99,6 +103,9 @@ module.exports = {
             const result = results.videos[0]
             const video = map.get(channel.guild.id).queue.push(result)
             map.set(channel.guild.id.queue, video)
+
+            console.log(`Added "${result.title}" to the queue in ${interaction.guildId}`)
+
             await interaction.editReply(`Added "${result.title}" to the queue!`)
             
         } else {

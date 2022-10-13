@@ -1,5 +1,6 @@
 #!/home/madas/.nvm/versions/node/v16.16.0/bin/node
 require('dotenv').config();
+require('console-stamp')(console, '[HH:MM:ss.l]');
 const fs = require('fs');
 const Database = require("./config/Database")
 const { Client, Intents, Collection} = require('discord.js');
