@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { joinVoiceChannel, createAudioResource, createAudioPlayer, AudioPlayerStatus} = require("@discordjs/voice")
+const { joinVoiceChannel, createAudioResource, createAudioPlayer, AudioPlayerStatus, getVoiceConnection} = require("@discordjs/voice")
 const ytdl = require('ytdl-core');
 const yts = require( 'yt-search' );
 // const ch = require('chalk')
@@ -95,9 +95,8 @@ module.exports = {
             
         } else if(map.get(channel.guild.id).queue) {
             console.log("queue exists")
-
-            // add some way to check if user is in the same vc as the bot
-            // if(channel == botCurrentGuildVC) return interaction.editReply("You need to be in the same voice channel as the bot!")
+            
+            if(channel != getVoiceConnection(channel.guild.id).joinConfig.channelId) return interaction.editReply("You need to be in the same voice channel as the bot!")
 
             const results = await yts({query: query, type: "video"})
             const result = results.videos[0]

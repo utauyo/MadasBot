@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { getVoiceConnection } = require('@discordjs/voice')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,7 +12,7 @@ module.exports = {
 
         if(queueMap.get(interaction.guildId)) {
             // Check for if youre in a vc
-            if(!channel) return interaction.editReply("You need to be in the same voice channel as the bot!")
+            if(channel != getVoiceConnection(channel.guild.id).joinConfig.channelId) return interaction.editReply("You need to be in the same voice channel as the bot!")
 
             var message = "I have no idea how you did this"
 
