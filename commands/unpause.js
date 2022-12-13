@@ -3,18 +3,19 @@ const { getVoiceConnection } = require('@discordjs/voice')
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('pause')
-        .setDescription('Pause whatever is currently playing.')
+        .setName('unpause')
+        .setDescription('Resume playback!')
         ,
     async execute(interaction) {
+        return
 
         const connection = getVoiceConnection(interaction.guildId)
 
-        if(!connection) return interaction.reply({content: "The bot is not currently playing anything!"})
+        // if(!connection || interaction.client.queueMap.get(interaction.guildId)) return interaction.reply({content: "There is nothing to unpause!"})
 
         if(interaction.member.voice.channel != getVoiceConnection(interaction.guild.id).joinConfig.channelId) return interaction.reply("You need to be in the same voice channel as the bot!")
 
-        connection._state.subscription.player.pause()
+        connection._state.subscription.player.unpause()
         
         await interaction.reply({
             content: "Paused!",

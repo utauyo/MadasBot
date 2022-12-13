@@ -30,6 +30,8 @@ module.exports = {
         // Check if a queue exists for the server youre in
         if(!map.get(channel.guild.id)) {
 
+            // if(!interaction.options._hoistedOptions) return interaction.editReply("You must provide a query!")
+
             console.log("Music queue doesnt exist")
 
             const results = await yts({query: query, type: "video"})
@@ -94,18 +96,22 @@ module.exports = {
             await interaction.editReply(`Playing "${gqGet.queue[0].title}"`)
             
         } else if(map.get(channel.guild.id).queue) {
-            console.log("queue exists")
-            
-            if(channel != getVoiceConnection(channel.guild.id).joinConfig.channelId) return interaction.editReply("You need to be in the same voice channel as the bot!")
+            if(getVoiceConnection(channel.guild.id)._state.subscribtion.player._state == "paused") {
+                getVoiceConnection(channel.guild.id)._state.subscribtion.player.unpause()
+            } else {
+                console.log("queue exists")
+                
+                if(channel != getVoiceConnection(channel.guild.id).joinConfig.channelId) return interaction.editReply("You need to be in the same voice channel as the bot!")
 
-            const results = await yts({query: query, type: "video"})
-            const result = results.videos[0]
-            const video = map.get(channel.guild.id).queue.push(result)
-            map.set(channel.guild.id.queue, video)
+                const results = await yts({query: query, type: "video"})
+                const result = results.videos[0]
+                const video = map.get(channel.guild.id).queue.push(result)
+                map.set(channel.guild.id.queue, video)
 
-            console.log(`Added "${result.title}" to the queue in ${interaction.guildId}`)
+                console.log(`Added "${result.title}" to the queue in ${interaction.guildId}`)
 
-            await interaction.editReply(`Added "${result.title}" to the queue!`)
+                await interaction.editReply(`Added "${result.title}" to the queue!`)
+            }
             
         } else {
             await interaction.editReply("Something went seriously wrong!")

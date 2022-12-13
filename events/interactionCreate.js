@@ -27,13 +27,13 @@ module.exports = {
             try {
                 await interaction.reply({
                     embeds: [embed],
-                    ephemeral: false
+                    ephemeral: true
                 });
             } catch(error) {
                 try {
                     await interaction.editReply({
                         embeds: [embed],
-                        ephemeral: false
+                        ephemeral: true
                     });
                 } catch(error) {return}
                 
