@@ -1,10 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const ytdl = require('ytdl-core');
 const { joinVoiceChannel, createAudioResource, createAudioPlayer, AudioPlayerStatus} = require("@discordjs/voice")
+const ytdl = require('ytdl-core');
 const yts = require( 'yt-search' );
 // const ch = require('chalk')
-
-const map = new Map();
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,20 +14,14 @@ module.exports = {
             ),
     async execute(interaction) {    
 
+        const map = interaction.client.queueMap
+
         const channel = interaction.member.voice.channel
 
         const query = interaction.options._hoistedOptions[0].value
 
-        // queue.set(interaction.member.voice.channel.guild.id, {
-        //     queue: ["https://www.youtube.com/watch?v=dQw4w9WgXcQ", "https://www.youtube.com/watch?v=4RTHOB7e46o", "c"],
-        //     connection: "connection or smtn idk",
-        //     currentsong: {title: "Rick Astley - Never Gonna Give You Up (Official Music Video)", link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", status: "playing"},
-        //     player: "not even sure if i need this",
-        //     thechannel: interaction.channel.id
-        // })
-
         await interaction.deferReply({
-            ephemeral: true
+            ephemeral: false
         })
         
         // Check for if youre in a vc
@@ -46,15 +38,12 @@ module.exports = {
             map.set(channel.guild.id, {
                 thechannel: interaction.channel.id,
                 queue: [result],
+                loop: false
             })
-
-            console.log("Music queue init")
 
             const gqGet = map.get(channel.guild.id)
 
-            // const gqSet = function(a,b) {map.set(channel.guild.id.${a}, b)}
-
-            // console.log(gq)
+            console.log("Music queue created")
             
             const getNextSong = function() {
                 const array = gqGet.queue.slice(1,0)
@@ -68,15 +57,15 @@ module.exports = {
                 channelId: channel.id,
                 guildId: channel.guild.id,
                 adapterCreator: channel.guild.voiceAdapterCreator,
-            });
-
-            const resource = createAudioResource(ytdl(gqGet.queue[0].url))
+            }); 
 
             const player = createAudioPlayer();
 
+            const resource = createAudioResource(ytdl(gqGet.queue[0].url, { filter: "audioonly"}))
+
             connection.subscribe(player)
 
-            player.play(resource)
+            player.play(resource) || console.log("not playing")
             
             player.on('error', error => {
                 console.error('Error:', error.message, 'with track');
@@ -84,13 +73,20 @@ module.exports = {
 
             player.on(AudioPlayerStatus.Idle, () => {
                 console.log(`Idling in ${interaction.guildId}`)
-                if(gqGet.queue.length < 2) {
-                    map.delete(interaction.guildId)
+
+                if(gqGet.loop == true) {
+                    player.play(createAudioResource(ytdl(gqGet.queue[0].url)))
+                    return
                 } else {
-                    player.play(getNextSong());
-                    console.log(`Playing next song "${gqGet.queue[0].title}" in ${interaction.guild}`)
-                    interaction.channel.message.send(`Playing next song "${gqGet.queue[0].title}"!`)
+                    if(gqGet.queue.length <= 1) {
+                        map.delete(interaction.guildId)
+                    } else {
+                        player.play(getNextSong());
+                        console.log(`Playing next song "${gqGet.queue[0].title}" in ${interaction.guild}`)
+                    }
                 }
+
+                
             });
             console.log(gqGet)
             console.log(`Playing "${gqGet.queue[0].title}" in ${interaction.guild} (${interaction.guildId})`)
@@ -99,6 +95,10 @@ module.exports = {
             
         } else if(map.get(channel.guild.id).queue) {
             console.log("queue exists")
+
+            // add some way to check if user is in the same vc as the bot
+            // if(channel == botCurrentGuildVC) return interaction.editReply("You need to be in the same voice channel as the bot!")
+
             const results = await yts({query: query, type: "video"})
             const result = results.videos[0]
             const video = map.get(channel.guild.id).queue.push(result)
@@ -109,57 +109,8 @@ module.exports = {
             await interaction.editReply(`Added "${result.title}" to the queue!`)
             
         } else {
-            await interaction.editReply("Something went wrong!")
+            await interaction.editReply("Something went seriously wrong!")
         }
 
-        // if(ytdl.validateURL(query) === true) {
-        //     console.log(query)
-        // } else {
-        //     const results = await yts({query: query, type: video})
-        //     const video = results.videos[0]
-        //     console.log(video)
-        //     console.log(video.title)
-        // }
-
-        // if(!channel) return interaction.reply("You need to be in a voice chat!")
-
-        // if(!queue.get(channel.guild.id)) {
-        //     queue.set(channel.guild.id, {
-        //         queue: [query]
-        //     })
-
-        //     interaction.reply("god i hope this fucking works");
-        // } else {
-        //     var array = queue.get(channel.guild.id).queue.push(query)
-        //     queue.set(channel.guild.id, {
-        //         queue: array
-        //     })
-        // }
-
-        
-
-        
-
-        // var connection = joinVoiceChannel({
-        //     channelId: channel.id,
-        //     guildId: channel.guild.id,
-        //     adapterCreator: channel.guild.voiceAdapterCreator,
-        // });
-
-        // let resource = createAudioResource(song, {
-        //     inlineVolume : true
-        // })
-
-        // resource.volume.setVolume(0.9)
-
-        // const player = createAudioPlayer();
-
-        // connection.subscribe(player)
-
-        // player.play(resource)
-
-
-
     },
-    map
 }
