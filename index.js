@@ -18,6 +18,7 @@ const client = new Client({
 });
 
 client.queueMap = new Map()
+client.utils = require("./utils.js")
 
 // Load all commands
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));

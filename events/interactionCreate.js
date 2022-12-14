@@ -1,6 +1,5 @@
 // const { REST } = require('@discordjs/rest');
 // const { Routes } = require('discord-api-types/v9');
-const epic = require('../epic.js')
 const { MessageEmbed } = require('discord.js')
 require('dotenv').config();
 
@@ -21,7 +20,7 @@ module.exports = {
             if(error) console.log(error);
             const embed = new MessageEmbed() 
             .setDescription(`Something went wrong!`)
-            .setImage(`${epic.randomCrashGif()}`)
+            .setImage(`${interaction.client.utils.randomCrashGif()}`)
             .setColor('#ff5c5c')
     
             try {
