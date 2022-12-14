@@ -12,7 +12,8 @@ module.exports = {
         const connection = getVoiceConnection(interaction.guildId)
 
         // Check if a connection or a queue exists
-        if(!connection || interaction.client.queueMap.get(interaction.guildId).queue.length == 0) return interaction.reply({content: "There is nothing to unpause!"})
+        // || interaction.client.queueMap.get(interaction.guildId).queue.length == 0
+        if(!connection || connection._state.subscription.player._state.status == "idle") return interaction.reply({content: "There is nothing to unpause!"})
 
         // Check if player is playing
         if(connection._state.subscription.player._state.status == "playing") return interaction.reply("Already playing!")
