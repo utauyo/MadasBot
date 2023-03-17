@@ -10,16 +10,17 @@ module.exports = {
         .addSubcommand(
             new SlashCommandSubcommandBuilder()
                 .setName("define")
-                .setDescription("Get the definition of a term.")
+                .setDescription("Get the definition of a word from Urban Dictionary.")
                 .addStringOption((term) => term.setName("term").setRequired(true).setDescription("Term to search for"))
         )
-        .addSubcommand(new SlashCommandSubcommandBuilder().setName("wotd").setDescription("Words of the day.")),
-    // .addStringOption(term => term.setName('term').setRequired(true).setDescription('term to search for'))
+        .addSubcommand(
+            new SlashCommandSubcommandBuilder().setName("wotd").setDescription("Urban Dictionary word of the day.")
+        ),
     async execute(interaction) {
         interaction.deferReply({ ephemeral: false })
 
         if (interaction.options.getSubcommand() === "define") {
-            const theWordsIdk = interaction.options._hoistedOptions[0].value
+            const theWordsIdk = interaction.options.getString("term")
             ud.define(theWordsIdk, (error, results) => {
                 try {
                     if (error) console.log(error)
@@ -30,9 +31,11 @@ module.exports = {
                         .setTitle(`Definition of ${finalResult.word}`)
                         .setURL(`${finalResult.permalink}`)
                         .setDescription(`${finalResult.definition}`)
-                        .addField("Example", `${finalResult.example}`, false)
-                        .addField("👍", `${finalResult.thumbs_up}`, true)
-                        .addField("👎", `${finalResult.thumbs_down}`, true)
+                        .addFields(
+                            { name: "Example", value: `${finalResult.example}`, inline: false },
+                            { name: "👍", value: `${finalResult.thumbs_up}`, inline: true },
+                            { name: "👎", value: `${finalResult.thumbs_down}`, inline: true }
+                        )
                         .setColor(process.env.EMBED_COLOUR)
                         .setFooter({
                             text: `by ${finalResult.author} on ${fromIsoToHuman(finalResult.written_on, "DD/MM/YYYY")}`,
@@ -55,12 +58,14 @@ module.exports = {
                 const finalResult = results[0]
 
                 const embed = new MessageEmbed()
-                    .setTitle(`Top word of the day: ${finalResult.word}`)
+                    .setTitle(`Word of the day: ${finalResult.word}`)
                     .setURL(`${finalResult.permalink}`)
                     .setDescription(`${finalResult.definition}`)
-                    .addField("Example", `${finalResult.example}`, false)
-                    .addField("👍", `${finalResult.thumbs_up}`, true)
-                    .addField("👎", `${finalResult.thumbs_down}`, true)
+                    .addFields(
+                        { name: "Example", value: `${finalResult.example}`, inline: false },
+                        { name: "👍", value: `${finalResult.thumbs_up}`, inline: true },
+                        { name: "👎", value: `${finalResult.thumbs_down}`, inline: true }
+                    )
                     .setColor(process.env.EMBED_COLOUR)
                     .setFooter({
                         text: `by ${finalResult.author} on ${fromIsoToHuman(finalResult.written_on, "DD/MM/YYYY")}`,
@@ -71,8 +76,6 @@ module.exports = {
                     ephemeral: false,
                 })
             })
-        } else {
-            interaction.editReply("I am sorry how the fuck?")
         }
     },
 }

@@ -16,6 +16,7 @@ class Database {
             })
             .then(() => {
                 console.log("Connected to database!")
+                mongoose.set("strictQuery", false)
                 this.connection = mongoose.connection
             })
             .catch((err) => {
